@@ -186,16 +186,19 @@ func (s *systemd) Install() error {
 		s.Option.string(optionLogDirectory, defaultLogDirectory),
 	}
 
+	fmt.Printf("creating the unit file")
 	err = s.template().Execute(f, to)
 	if err != nil {
 		return err
 	}
 
+	fmt.Printf("running action enable")
 	err = s.runAction("enable")
 	if err != nil {
 		return err
 	}
 
+	fmt.Printf("running daemon-reload")
 	return s.run("daemon-reload")
 }
 
@@ -302,7 +305,7 @@ func (s *systemd) runAction(action string) error {
 const systemdScript = `[Unit]
 Description={{.Description}}
 ConditionFileIsExecutable={{.Path|cmdEscape}}
-{{range $i, $dep := .Dependencies}} 
+{{range $i, $dep := .Dependencies}}
 {{$dep}} {{end}}
 
 [Service]
