@@ -73,7 +73,8 @@ func (s *systemd) Platform() string {
 
 func (s *systemd) configPath() (cp string, err error) {
 	if !s.isUserService() {
-		cp = "/etc/systemd/system/" + s.unitName()
+		// TODO: Experiment to test if changing the path helps with NixOS
+		cp = "/etc/systemd-mutable/system/" + s.unitName()
 		return
 	}
 	homeDir, err := os.UserHomeDir()
